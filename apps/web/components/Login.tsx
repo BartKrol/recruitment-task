@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import login from '../utils/login';
 import { FormProvider, RHFTextField } from './hook-form';
+import { useSetToken } from '../store/tokenStore';
 
 type FormValuesProps = {
   email: string;
@@ -12,14 +13,15 @@ type FormValuesProps = {
   afterSubmit?: string;
 };
 
-export default function Login({ onSuccess }: { onSuccess: () => void }) {
-  const LoginSchema = Yup.object().shape({
-    email: Yup.string()
-      .email('Email must be a valid email address')
-      .required('Email is required'),
-    password: Yup.string().required('Password is required'),
-  });
+const LoginSchema = Yup.object().shape({
+  email: Yup.string()
+    .email('Email must be a valid email address')
+    .required('Email is required'),
+  password: Yup.string().required('Password is required'),
+});
 
+export default function Login() {
+  const setToken = useSetToken();
   const defaultValues = {
     email: '',
     password: '',
@@ -39,8 +41,11 @@ export default function Login({ onSuccess }: { onSuccess: () => void }) {
 
   const onSubmit = async (data: FormValuesProps) => {
     try {
-      await login({ email: data.email, password: data.password });
-      onSuccess();
+      const { token } = await login({
+        email: data.email,
+        password: data.password,
+      });
+      setToken(token);
     } catch (error) {
       console.error(error);
       reset();

@@ -19,6 +19,12 @@ export class UserSeederService {
         email: 'test@subflow.com',
         password: bcrypt.hashSync('password', 10),
       }),
+      User.create({
+        id: '4162b5c1-a1bd-4533-a98a-38b4c488ff1b',
+        name: 'Another Test User',
+        email: 'test2@subflow.com',
+        password: bcrypt.hashSync('password', 10),
+      }),
     ];
 
     return users.map(async (user: User) => {

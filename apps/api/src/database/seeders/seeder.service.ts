@@ -11,7 +11,7 @@ export class SeederService {
   async seed() {
     await this.users()
       .then((completed) => {
-        this.logger.debug('Successfuly completed seeding users...');
+        this.logger.debug('Successfully completed seeding users...');
         Promise.resolve(completed);
       })
       .catch((error) => {

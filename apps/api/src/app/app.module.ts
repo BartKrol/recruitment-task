@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { ChatModule } from './chat/chat.module';
 
 import configuration from '../config/configuration';
 
@@ -37,6 +38,7 @@ import configuration from '../config/configuration';
     }),
     UserModule,
     AuthModule,
+    ChatModule,
   ],
   controllers: [],
   providers: [],

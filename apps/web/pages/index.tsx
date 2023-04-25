@@ -1,8 +1,14 @@
-import { useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
-import { Box, Stack, Container, Typography } from '@mui/material';
+import {
+  Box,
+  Stack,
+  Container,
+  Typography,
+  CircularProgress,
+} from '@mui/material';
 import Login from '../components/Login';
 import Chat from '../components/Chat';
+import { useGetUser } from '../store/tokenStore';
 
 const ContentStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
@@ -17,7 +23,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 
 export function Index() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const user = useGetUser();
 
   return (
     <Container maxWidth="sm" style={{ margin: 0 }}>
@@ -33,10 +39,12 @@ export function Index() {
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center" sx={{ mb: 5 }}>
-          {isLoggedIn ? (
-            <Chat />
+          {user === undefined ? (
+            <CircularProgress />
+          ) : user ? (
+            <Chat user={user} />
           ) : (
-            <Login onSuccess={() => setIsLoggedIn(true)} />
+            <Login />
           )}
         </Stack>
       </ContentStyle>
