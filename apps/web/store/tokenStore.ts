@@ -1,5 +1,6 @@
 import { atom, useSetAtom, useAtomValue } from 'jotai';
-import jwt from 'jsonwebtoken';
+import { parseToken } from '../utils/token';
+import { User } from '../utils/types';
 
 const tokenAtom = atom<string | undefined | null>(undefined);
 
@@ -13,37 +14,29 @@ export const tokenAtomWithPersistance = atom(
   (get) => {
     const token = get(tokenAtom);
 
+    if (token === undefined) {
+      return undefined;
+    }
+
     if (!token) {
       return null;
     }
 
-    const decodedToken = jwt.decode(token, { json: true });
-    if (!decodedToken) {
-      localStorage.removeItem(TOKEN_KEY);
-      return null;
-    }
-
-    if (!decodedToken.exp) {
-      localStorage.removeItem(TOKEN_KEY);
-      return null;
-    }
-
-    if (decodedToken.exp < Date.now() / 1000) {
+    const decodedToken = parseToken(token);
+    if (!decodedToken || decodedToken.exp < Date.now() / 1000) {
       localStorage.removeItem(TOKEN_KEY);
       return null;
     }
 
     return token;
   },
-  (_get, set, newToken: string) => {
+  (_get, set, newToken: string | null) => {
     set(tokenAtom, newToken);
-    localStorage.setItem('token', newToken);
+    newToken
+      ? localStorage.setItem(TOKEN_KEY, newToken)
+      : localStorage.removeItem(TOKEN_KEY);
   }
 );
-
-type User = {
-  id: string;
-};
 
 export const userAtom = atom<User | null | undefined>((get) => {
   const token = get(tokenAtomWithPersistance);
@@ -56,13 +49,13 @@ export const userAtom = atom<User | null | undefined>((get) => {
     return null;
   }
 
-  const decodedToken = jwt.decode(token, { json: true });
+  const decodedToken = parseToken(token);
 
   if (!decodedToken) {
     return null;
   }
 
-  return decodedToken as { id: string };
+  return User.parse(decodedToken);
 });
 
 export const useSetToken = () => useSetAtom(tokenAtomWithPersistance);

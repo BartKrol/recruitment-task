@@ -19,14 +19,22 @@ function Message({ message, isCurrentUser }: MessageProps) {
         }}
       >
         <Typography variant="body2" color="GrayText">
-          {message.fromUser.name}
+          {isCurrentUser ? 'You' : message.fromUser.name}
         </Typography>
         <Typography variant="body2" color="GrayText">
           {formatDistance(zonedTimeToUtc(message.createdAt, 'UTC'), new Date())}
         </Typography>
       </Box>
       <Chip
-        key={message.id}
+        sx={{
+          height: 'auto',
+          '& .MuiChip-label': {
+            display: 'block',
+            whiteSpace: 'normal',
+          },
+          paddingY: 1,
+          justifyContent: 'flex-start',
+        }}
         label={message.text}
         color={isCurrentUser ? 'primary' : 'secondary'}
       />

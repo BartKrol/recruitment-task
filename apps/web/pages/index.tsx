@@ -9,6 +9,7 @@ import {
 import Login from '../components/Login';
 import Chat from '../components/Chat';
 import { useGetUser } from '../store/tokenStore';
+import { useCheckTokenExpiration } from '../utils/token';
 
 const ContentStyle = styled('div')(({ theme }) => ({
   maxWidth: 480,
@@ -23,6 +24,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 }));
 
 export function Index() {
+  useCheckTokenExpiration();
   const user = useGetUser();
 
   return (

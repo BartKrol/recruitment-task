@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { io } from 'socket.io-client';
 import { config } from './config';
-import { useGetToken } from '../store/tokenStore';
+import { useGetToken, useSetToken } from '../store/tokenStore';
+import { parseToken } from './token';
 
 export type Message = {
   id: string;
@@ -15,12 +16,15 @@ export type Message = {
 
 export const useConnect = () => {
   const token = useGetToken();
+  const setToken = useSetToken();
+
   const socket = useMemo(
     () =>
       io(config.apiUrl, {
         auth: {
           token: `Bearer ${token}`,
         },
+        autoConnect: false,
       }),
     [token]
   );
@@ -61,7 +65,9 @@ export const useConnect = () => {
   }, [socket, onMessage, onConnect, onDisconnect]);
 
   useEffect(() => {
-    if (!token) {
+    if (token) {
+      socket.connect();
+    } else {
       socket.disconnect();
     }
   }, [socket, token]);

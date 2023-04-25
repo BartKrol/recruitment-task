@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { Message } from './message.entity';
 import { UserService } from '../user/user.service';
+import { MessageResponseDto } from './message.response.dto';
 
 @Injectable()
 export class MessageService {
@@ -21,10 +22,11 @@ export class MessageService {
   public async saveMessage(message: {
     fromUser: string;
     text: string;
-  }): Promise<Message> {
+  }): Promise<MessageResponseDto> {
     const insert = new Message();
     insert.text = message.text;
     insert.fromUser = await this.userService.getUserById(message.fromUser);
-    return this.messageRepository.save(insert);
+    const entity = await this.messageRepository.save(insert);
+    return new MessageResponseDto(entity);
   }
 }

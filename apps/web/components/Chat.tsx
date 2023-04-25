@@ -2,9 +2,10 @@ import { Container, Typography, TextField, Stack, Button } from '@mui/material';
 import { useConnect } from '../utils/chat';
 import { useCallback, useState } from 'react';
 import Message from './Message';
+import type { User } from '../utils/types';
 
 export type ChatProps = {
-  user: { id: string };
+  user: User;
 };
 
 export function Chat({ user }: ChatProps) {
