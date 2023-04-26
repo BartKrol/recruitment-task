@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import Login from '../components/Login';
 import Chat from '../components/Chat';
-import { useGetUser } from '../store/tokenStore';
+import { useGetToken, useGetUser } from '../store/tokenStore';
 import { useCheckTokenExpiration } from '../utils/token';
 
 const ContentStyle = styled('div')(({ theme }) => ({

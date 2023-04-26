@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useState, useMemo } from 'react';
 import { io } from 'socket.io-client';
 import { config } from './config';
-import { useGetToken, useSetToken } from '../store/tokenStore';
-import { parseToken } from './token';
+import { useGetToken } from '../store/tokenStore';
 
 export type Message = {
   id: string;
@@ -16,7 +15,6 @@ export type Message = {
 
 export const useConnect = () => {
   const token = useGetToken();
-  const setToken = useSetToken();
 
   const socket = useMemo(
     () =>
@@ -59,8 +57,7 @@ export const useConnect = () => {
     socket.on('chat', onMessage);
 
     return () => {
-      socket.off('connect', onConnect);
-      socket.off('disconnect', onDisconnect);
+      socket.disconnect();
     };
   }, [socket, onMessage, onConnect, onDisconnect]);
 

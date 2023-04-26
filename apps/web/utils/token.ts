@@ -48,7 +48,6 @@ export const useCheckTokenExpiration = () => {
     }
 
     setTimeout(() => {
-      console.log('Token expired');
       setToken(null);
     }, parsedToken.exp * 1000 - Date.now() - 1000);
   }, [parsedToken, setToken]);
