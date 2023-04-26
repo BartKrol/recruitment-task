@@ -44,7 +44,6 @@ export const useCheckTokenExpiration = () => {
 
   useEffect(() => {
     if (!parsedToken) {
-      setToken(null);
       return;
     }
 
